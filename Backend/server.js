@@ -686,7 +686,7 @@ const superFix = async () => {
         // 1. Create all tables from your init.sql schema
         await pool.query(`
             
-
+            DROP TABLE IF EXISTS feedback CASCADE;
 
             CREATE TABLE IF NOT EXISTS users (
                 user_id SERIAL PRIMARY KEY,
@@ -741,8 +741,6 @@ const superFix = async () => {
                 issued_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 status VARCHAR(20) DEFAULT 'pending'
             );
-
-            DROP TABLE IF EXISTS feedback CASCADE;
 
             CREATE TABLE feedback (
                 feedback_id SERIAL PRIMARY KEY,
