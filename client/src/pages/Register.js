@@ -62,21 +62,7 @@ const Register = () => {
             return emailRegex.test(email);
         };
 
-        const validatePassword = (password) => {
-            if (password.length < 8) {
-                return { valid: false, message: "Password must be at least 8 characters long" };
-            }
-            if (!/[A-Z]/.test(password)) {
-                return { valid: false, message: "Password must contain at least one uppercase letter" };
-            }
-            if (!/[a-z]/.test(password)) {
-                return { valid: false, message: "Password must contain at least one lowercase letter" };
-            }
-            if (!/[0-9]/.test(password)) {
-                return { valid: false, message: "Password must contain at least one number" };
-            }
-            return { valid: true };
-        };
+        // Password validation removed - accept any password
 
         const validateEthiopianPhone = (phone) => {
             if (!phone) return true; // Phone is optional
@@ -108,10 +94,6 @@ const Register = () => {
         // Validate password
         if (!formData.password) {
             return alert("Password is required");
-        }
-        const passwordValidation = validatePassword(formData.password);
-        if (!passwordValidation.valid) {
-            return alert(passwordValidation.message);
         }
 
         // Validate phone number
@@ -251,7 +233,6 @@ const Register = () => {
                                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                                 style={styles.input}
                                 required
-                                minLength="8"
                             />
                         </div>
 

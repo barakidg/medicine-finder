@@ -30,10 +30,6 @@ const Login = () => {
             return alert("Password is required");
         }
 
-        if (trimmedPassword.length < 8) {
-            return alert("Password must be at least 8 characters long");
-        }
-
         setLoading(true);
         try {
             const res = await axios.post('http://localhost:5000/api/auth/login', {

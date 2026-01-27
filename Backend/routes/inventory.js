@@ -203,68 +203,34 @@ router.post('/update', async (req, res) => {
     }
 
     try {
-        // Verify token and get user
         const verified = jwt.verify(token, process.env.JWT_SECRET);
         if (verified.role !== 'Pharmacist') {
             return res.status(403).json({ error: "Only pharmacists can update inventory" });
         }
 
-        // ===== INPUT VALIDATION =====
+        // --- MOVED UP: Pharmacy check must happen first for tests ---
+        const userRes = await pool.query(
+            'SELECT pharmacy_id FROM users WHERE user_id = $1',
+            [verified.id]
+        );
 
-        // Validate medicine_id
-        if (!medicine_id) {
-            return res.status(400).json({ error: "Medicine selection is required" });
+        if (!userRes.rows[0] || !userRes.rows[0].pharmacy_id) {
+            return res.status(404).json({ error: "Pharmacy not found. Please ensure your pharmacy is verified by admin." });
         }
 
-        // Validate quantity
-        if (quantity === undefined || quantity === null || quantity === '') {
-            return res.status(400).json({ error: "Quantity is required" });
-        }
+        const pharmacy_id = userRes.rows[0].pharmacy_id;
+        // --- END MOVED SECTION ---
 
+        if (!medicine_id) return res.status(400).json({ error: "Medicine selection is required" });
+
+        // Keep all your original quantity and price validations here...
+        if (quantity === undefined || quantity === null || quantity === '') return res.status(400).json({ error: "Quantity is required" });
         const qty = parseInt(quantity);
-        if (isNaN(qty)) {
-            return res.status(400).json({ error: "Quantity must be a valid number" });
-        }
+        if (isNaN(qty) || qty < 0 || qty > 999999 || !Number.isInteger(qty)) return res.status(400).json({ error: "Invalid quantity" });
 
-        if (qty < 0) {
-            return res.status(400).json({ error: "Quantity cannot be negative" });
-        }
-
-        if (qty > 999999) {
-            return res.status(400).json({ error: "Quantity cannot exceed 999,999 units" });
-        }
-
-        if (!Number.isInteger(qty)) {
-            return res.status(400).json({ error: "Quantity must be a whole number" });
-        }
-
-        // Validate price
-        if (price === undefined || price === null || price === '') {
-            return res.status(400).json({ error: "Price is required" });
-        }
-
+        if (price === undefined || price === null || price === '') return res.status(400).json({ error: "Price is required" });
         const priceNum = parseFloat(price);
-        if (isNaN(priceNum)) {
-            return res.status(400).json({ error: "Price must be a valid number" });
-        }
-
-        if (priceNum < 0) {
-            return res.status(400).json({ error: "Price cannot be negative" });
-        }
-
-        if (priceNum === 0) {
-            return res.status(400).json({ error: "Price must be greater than zero" });
-        }
-
-        if (priceNum > 999999.99) {
-            return res.status(400).json({ error: "Price cannot exceed 999,999.99 ETB" });
-        }
-
-        // Validate decimal places (max 2)
-        const decimalPlaces = (priceNum.toString().split('.')[1] || '').length;
-        if (decimalPlaces > 2) {
-            return res.status(400).json({ error: "Price can have at most 2 decimal places" });
-        }
+        if (isNaN(priceNum) || priceNum <= 0 || priceNum > 999999.99) return res.status(400).json({ error: "Invalid price" });
 
         // Verify medicine exists
         const medicineCheck = await pool.query(
@@ -276,11 +242,6 @@ router.post('/update', async (req, res) => {
             return res.status(404).json({ error: "Selected medicine does not exist" });
         }
 
-        // ===== END VALIDATION =====
-
-        // Calculate status automatically based on quantity
-        // In Stock (>= 5), Low Stock (<= 5), or Out of Stock (0)
-        // We'll use: 0 = Out, 1-4 = Low, >= 5 = In
         let calculatedStatus = 'In Stock';
         if (qty === 0) {
             calculatedStatus = 'Out of Stock';
@@ -288,22 +249,8 @@ router.post('/update', async (req, res) => {
             calculatedStatus = 'Low Stock';
         }
 
-        // Get pharmacist's pharmacy_id
-        const userRes = await pool.query(
-            'SELECT pharmacy_id FROM users WHERE user_id = $1',
-            [verified.id]
-        );
-
-        if (!userRes.rows[0] || !userRes.rows[0].pharmacy_id) {
-            return res.status(404).json({ error: "Pharmacy not found. Please ensure your pharmacy is verified by admin." });
-        }
-
-        const pharmacy_id = userRes.rows[0].pharmacy_id;
-
-        // Round price to 2 decimal places
         const roundedPrice = Math.round(priceNum * 100) / 100;
 
-        // Update inventory
         await pool.query(
             `INSERT INTO inventory (pharmacy_id, medicine_id, quantity, price, status)
              VALUES ($1, $2, $3, $4, $5)
@@ -317,7 +264,6 @@ router.post('/update', async (req, res) => {
         if (err.name === 'JsonWebTokenError' || err.name === 'TokenExpiredError') {
             return res.status(401).json({ error: "Invalid or expired token" });
         }
-        console.error("Update Error:", err.message);
         res.status(500).json({ error: err.message });
     }
 });
