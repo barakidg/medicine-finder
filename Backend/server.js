@@ -744,13 +744,13 @@ const superFix = async () => {
 
             DROP TABLE IF EXISTS feedback CASCADE;
 
-            CREATE TABLE IF NOT EXISTS feedback (
+            CREATE TABLE feedback (
                 feedback_id SERIAL PRIMARY KEY,
                 patient_id INTEGER REFERENCES users(user_id) ON DELETE CASCADE,
                 pharmacy_id INTEGER REFERENCES pharmacies(pharmacy_id) ON DELETE CASCADE,
                 rating INTEGER CHECK (rating >= 1 AND rating <= 5),
                 comment TEXT,
-                status VARCHAR(20) DEFAULT 'pending', -- Removed the CHECK constraint
+                status VARCHAR(20) DEFAULT 'pending', 
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             );
 
