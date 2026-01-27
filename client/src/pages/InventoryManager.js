@@ -42,7 +42,7 @@ export default function InventoryManager() {
     const fetchInventory = async () => {
         try {
             const token = localStorage.getItem('token');
-            const res = await axios.get('http://localhost:5000/api/inventory/my-inventory', {
+            const res = await axios.get('https://medicine-finder-yej7.onrender.com/api/inventory/my-inventory', {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setInventory(res.data);
@@ -57,7 +57,7 @@ export default function InventoryManager() {
 
     const fetchMedicines = async () => {
         try {
-            const res = await axios.get('http://localhost:5000/api/inventory/all-medicines');
+            const res = await axios.get('https://medicine-finder-yej7.onrender.com/api/inventory/all-medicines');
             setMedicines(res.data);
         } catch (err) {
             console.error("Failed to fetch medicines");
@@ -67,7 +67,7 @@ export default function InventoryManager() {
     const fetchPharmacyFeedback = async () => {
         try {
             const token = localStorage.getItem('token');
-            const res = await axios.get('http://localhost:5000/api/pharmacist/feedback', {
+            const res = await axios.get('https://medicine-finder-yej7.onrender.com/api/pharmacist/feedback', {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setPharmacyFeedback(res.data);
@@ -122,7 +122,7 @@ export default function InventoryManager() {
                 price: Math.round(price * 100) / 100 // Round to 2 decimal places
             };
 
-            await axios.post('http://localhost:5000/api/inventory/update', dataToSend, {
+            await axios.post('https://medicine-finder-yej7.onrender.com/api/inventory/update', dataToSend, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             alert("Inventory updated!");
@@ -154,7 +154,7 @@ export default function InventoryManager() {
                 category: newMedicine.category.trim() || ''
             };
 
-            await axios.post('http://localhost:5000/api/inventory/add-medicine', medicineData, {
+            await axios.post('https://medicine-finder-yej7.onrender.com/api/inventory/add-medicine', medicineData, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             alert("Medicine added successfully!");
@@ -179,7 +179,7 @@ export default function InventoryManager() {
 
         try {
             const token = localStorage.getItem('token');
-            const res = await axios.get(`http://localhost:5000/api/prescriptions/patient/${patientEmail}`, {
+            const res = await axios.get(`https://medicine-finder-yej7.onrender.com/api/prescriptions/patient/${patientEmail}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setPatientData(res.data);
@@ -194,7 +194,7 @@ export default function InventoryManager() {
 
         try {
             const token = localStorage.getItem('token');
-            await axios.put(`http://localhost:5000/api/prescriptions/${prescriptionId}/fulfill`, {}, {
+            await axios.put(`https://medicine-finder-yej7.onrender.com/api/prescriptions/${prescriptionId}/fulfill`, {}, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             alert('Prescription marked as fulfilled!');

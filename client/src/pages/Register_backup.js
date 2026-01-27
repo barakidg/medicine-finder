@@ -29,7 +29,7 @@ const Register = () => {
         if (formData.role !== 'Pharmacist') {
             setLoading(true);
             try {
-                await axios.post('http://localhost:5000/api/auth/register', formData);
+                await axios.post('https://medicine-finder-yej7.onrender.com/api/auth/register', formData);
                 alert("Registration successful! Please login.");
                 navigate('/login');
             } catch (err) {
@@ -47,7 +47,7 @@ const Register = () => {
         e.preventDefault();
         setLoading(true);
         try {
-            const response = await axios.post('http://localhost:5000/api/auth/register', {
+            const response = await axios.post('https://medicine-finder-yej7.onrender.com/api/auth/register', {
                 ...formData,
                 pharmacyDetails: pharmacyData
             });

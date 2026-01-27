@@ -37,7 +37,7 @@ export default function MedicineSearch() {
     const fetchPharmacyFeedback = async (pharmacyId) => {
         if (!pharmacyId) return;
         try {
-            const res = await axios.get(`http://localhost:5000/api/feedback/${pharmacyId}`);
+            const res = await axios.get(`https://medicine-finder-yej7.onrender.com/api/feedback/${pharmacyId}`);
             setPharmacyFeedback(prev => ({ ...prev, [pharmacyId]: res.data }));
             fetchedPharmacyIdsRef.current.add(pharmacyId);
         } catch (err) {
@@ -59,7 +59,7 @@ export default function MedicineSearch() {
     const handleSearch = async (e) => {
         if (e) e.preventDefault();
         try {
-            const res = await axios.get(`http://localhost:5000/api/inventory/search?medName=${query}`);
+            const res = await axios.get(`https://medicine-finder-yej7.onrender.com/api/inventory/search?medName=${query}`);
             setResults(res.data);
             if (res.data.length > 0) {
                 // Focus on first result immediately
@@ -82,7 +82,7 @@ export default function MedicineSearch() {
 
         try {
             const token = localStorage.getItem('token');
-            await axios.post('http://localhost:5000/api/feedback/submit', {
+            await axios.post('https://medicine-finder-yej7.onrender.com/api/feedback/submit', {
                 pharmacy_id: feedbackForm.pharmacy_id,
                 rating: feedbackForm.rating,
                 comment: feedbackForm.comment
@@ -130,7 +130,7 @@ export default function MedicineSearch() {
         if (medQuery) {
             setQuery(medQuery);
             // Re-fetch logic for direct links from profile
-            axios.get(`http://localhost:5000/api/inventory/search?medName=${medQuery}`)
+            axios.get(`https://medicine-finder-yej7.onrender.com/api/inventory/search?medName=${medQuery}`)
                 .then(res => {
                     setResults(res.data);
                     if (res.data.length > 0) {
@@ -168,7 +168,7 @@ export default function MedicineSearch() {
                                     <p>{item.address}</p>
                                     <span style={styles.stockLabel}>Stock: {item.quantity}</span>
                                     <p style={styles.priceLabel}>Price: ETB {item.price}</p>
-                                    
+
                                     {/* Display Average Rating */}
                                     {avgRating && (
                                         <div style={styles.ratingSection}>
@@ -194,7 +194,7 @@ export default function MedicineSearch() {
                                         </div>
                                     )}
                                 </div>
-                                
+
                                 {/* Write Review Button for Patients */}
                                 {user && user.role === 'Patient' && (
                                     <button
@@ -303,12 +303,12 @@ const styles = {
     container: { padding: '20px', maxWidth: '1200px', margin: '0 auto' },
     searchBox: { display: 'flex', gap: '10px', marginBottom: '20px' },
     input: { flex: 1, padding: '12px', borderRadius: '6px', border: '1px solid #ccc' },
-    button: { 
-        padding: '12px 24px', 
-        background: '#0056b3', 
-        color: 'white', 
-        border: 'none', 
-        borderRadius: '6px', 
+    button: {
+        padding: '12px 24px',
+        background: '#0056b3',
+        color: 'white',
+        border: 'none',
+        borderRadius: '6px',
         cursor: 'pointer',
         transition: 'opacity 0.2s ease'
     },
@@ -327,15 +327,15 @@ const styles = {
     reviewName: { fontSize: '0.8rem', fontWeight: 'bold', color: '#333' },
     reviewRating: { fontSize: '0.8rem', color: '#ff9800' },
     reviewComment: { fontSize: '0.75rem', color: '#555', fontStyle: 'italic', margin: 0 },
-    reviewBtn: { 
-        width: '100%', 
-        marginTop: '10px', 
-        padding: '8px', 
-        background: '#ff9800', 
-        color: 'white', 
-        border: 'none', 
-        borderRadius: '4px', 
-        cursor: 'pointer', 
+    reviewBtn: {
+        width: '100%',
+        marginTop: '10px',
+        padding: '8px',
+        background: '#ff9800',
+        color: 'white',
+        border: 'none',
+        borderRadius: '4px',
+        cursor: 'pointer',
         fontWeight: 'bold',
         fontSize: '0.9rem'
     },

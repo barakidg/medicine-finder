@@ -20,7 +20,7 @@ export default function DoctorDashboard() {
         }
 
         // Reuse your existing medicines endpoint
-        axios.get('http://localhost:5000/api/inventory/medicines')
+        axios.get('https://medicine-finder-yej7.onrender.com/api/inventory/medicines')
             .then(res => setMedicines(res.data));
     }, [user]);
 
@@ -33,7 +33,7 @@ export default function DoctorDashboard() {
 
         try {
             const token = localStorage.getItem('token');
-            await axios.post('http://localhost:5000/api/prescriptions/issue', {
+            await axios.post('https://medicine-finder-yej7.onrender.com/api/prescriptions/issue', {
                 ...prescription
             }, {
                 headers: {

@@ -679,39 +679,39 @@ app.get('/api/pharmacist/feedback', authenticateToken(['Pharmacist']), async (re
     }
 });
 
-const superFix = async () => {
-    try {
-        // 1. Ensure the table exists
-        await pool.query(`
-            CREATE TABLE IF NOT EXISTS users (
-                user_id SERIAL PRIMARY KEY,
-                full_name VARCHAR(255) NOT NULL,
-                email VARCHAR(255) UNIQUE NOT NULL,
-                password_hash VARCHAR(255) NOT NULL,
-                role VARCHAR(50) NOT NULL,
-                verified BOOLEAN DEFAULT FALSE,
-                status VARCHAR(20) DEFAULT 'active',
-                pharmacy_id INTEGER
-            );
-        `);
+// const superFix = async () => {
+//     try {
+//         // 1. Ensure the table exists
+//         await pool.query(`
+//             CREATE TABLE IF NOT EXISTS users (
+//                 user_id SERIAL PRIMARY KEY,
+//                 full_name VARCHAR(255) NOT NULL,
+//                 email VARCHAR(255) UNIQUE NOT NULL,
+//                 password_hash VARCHAR(255) NOT NULL,
+//                 role VARCHAR(50) NOT NULL,
+//                 verified BOOLEAN DEFAULT FALSE,
+//                 status VARCHAR(20) DEFAULT 'active',
+//                 pharmacy_id INTEGER
+//             );
+//         `);
 
-        // 2. GENERATE THE REAL HASH FOR "1111"
-        const salt = await bcrypt.genSalt(10);
-        const realHash = await bcrypt.hash('1111', salt);
+//         // 2. GENERATE THE REAL HASH FOR "1111"
+//         const salt = await bcrypt.genSalt(10);
+//         const realHash = await bcrypt.hash('1111', salt);
 
-        // 3. Insert or Update the Admin with the CORRECT hash
-        const query = `
-            INSERT INTO users (full_name, email, password_hash, role, verified, status)
-            VALUES ('System Admin', 'admin1@gmail.com', $1, 'Admin', TRUE, 'active')
-            ON CONFLICT (email) DO UPDATE SET password_hash = $1;
-        `;
+//         // 3. Insert or Update the Admin with the CORRECT hash
+//         const query = `
+//             INSERT INTO users (full_name, email, password_hash, role, verified, status)
+//             VALUES ('System Admin', 'admin1@gmail.com', $1, 'Admin', TRUE, 'active')
+//             ON CONFLICT (email) DO UPDATE SET password_hash = $1;
+//         `;
 
-        await pool.query(query, [realHash]);
-        console.log("✅ Admin account admin@gmail.com is now updated with password: 1111");
-    } catch (err) {
-        console.error("❌ Database fix failed:", err.message);
-    }
-};
+//         await pool.query(query, [realHash]);
+//         console.log("✅ Admin account admin@gmail.com is now updated with password: 1111");
+//     } catch (err) {
+//         console.error("❌ Database fix failed:", err.message);
+//     }
+// };
 
 const PORT = process.env.PORT || 5000;
 

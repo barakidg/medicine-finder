@@ -16,7 +16,7 @@ export default function ReceptionistPanel() {
     const fetchRecentPrescriptions = async () => {
         try {
             const token = localStorage.getItem('token');
-            const res = await axios.get('http://localhost:5000/api/reception/recent-prescriptions?limit=30', {
+            const res = await axios.get('https://medicine-finder-yej7.onrender.com/api/reception/recent-prescriptions?limit=30', {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setRecentPrescriptions(res.data);
@@ -31,7 +31,7 @@ export default function ReceptionistPanel() {
         e.preventDefault();
         try {
             const token = localStorage.getItem('token');
-            const res = await axios.get(`http://localhost:5000/api/reception/patient-records/${email}`, {
+            const res = await axios.get(`https://medicine-finder-yej7.onrender.com/api/reception/patient-records/${email}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setData(res.data);

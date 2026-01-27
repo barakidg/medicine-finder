@@ -19,17 +19,17 @@ const AdminDashboard = () => {
             const config = { headers: { Authorization: `Bearer ${token}` } };
 
             if (activeTab === 'pharmacies') {
-                const res = await axios.get('http://localhost:5000/api/admin/pharmacies', config);
+                const res = await axios.get('https://medicine-finder-yej7.onrender.com/api/admin/pharmacies', config);
                 setPharmacies(res.data);
             } else if (activeTab === 'doctors') {
-                const res = await axios.get('http://localhost:5000/api/admin/users', config);
+                const res = await axios.get('https://medicine-finder-yej7.onrender.com/api/admin/users', config);
                 // Filter to show only doctors
                 setUsers(res.data.filter(u => u.role === 'Doctor'));
             } else if (activeTab === 'users') {
-                const res = await axios.get('http://localhost:5000/api/admin/users', config);
+                const res = await axios.get('https://medicine-finder-yej7.onrender.com/api/admin/users', config);
                 setUsers(res.data);
             } else if (activeTab === 'feedback') {
-                const res = await axios.get('http://localhost:5000/api/admin/feedback', config);
+                const res = await axios.get('https://medicine-finder-yej7.onrender.com/api/admin/feedback', config);
                 setFeedback(res.data);
             }
         } catch (err) {
@@ -50,14 +50,14 @@ const AdminDashboard = () => {
     const handleVerifyPharmacy = async (id) => {
         try {
             const token = localStorage.getItem('token');
-            await axios.put(`http://localhost:5000/api/admin/pharmacies/${id}/verify`, {}, {
+            await axios.put(`https://medicine-finder-yej7.onrender.com/api/admin/pharmacies/${id}/verify`, {}, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             alert("Pharmacy verified successfully!");
             fetchAdminData();
             // Refresh search if active
             if (searchQuery.trim()) {
-                handleSearch({ preventDefault: () => {} });
+                handleSearch({ preventDefault: () => { } });
             }
         } catch (err) { alert("Verification failed"); }
     };
@@ -65,14 +65,14 @@ const AdminDashboard = () => {
     const handleVerifyDoctor = async (id) => {
         try {
             const token = localStorage.getItem('token');
-            await axios.put(`http://localhost:5000/api/admin/doctors/${id}/verify`, {}, {
+            await axios.put(`https://medicine-finder-yej7.onrender.com/api/admin/doctors/${id}/verify`, {}, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             alert("Doctor verified successfully!");
             fetchAdminData();
             // Refresh search if active
             if (searchQuery.trim()) {
-                handleSearch({ preventDefault: () => {} });
+                handleSearch({ preventDefault: () => { } });
             }
         } catch (err) { alert("Verification failed"); }
     };
@@ -80,14 +80,14 @@ const AdminDashboard = () => {
     const handleUserStatusChange = async (id, status) => {
         try {
             const token = localStorage.getItem('token');
-            await axios.put(`http://localhost:5000/api/admin/users/${id}/status`, { status }, {
+            await axios.put(`https://medicine-finder-yej7.onrender.com/api/admin/users/${id}/status`, { status }, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             alert(`User ${status === 'active' ? 'reactivated' : status} successfully!`);
             fetchAdminData();
             // Refresh search if active
             if (searchQuery.trim()) {
-                handleSearch({ preventDefault: () => {} });
+                handleSearch({ preventDefault: () => { } });
             }
         } catch (err) {
             alert("Action failed: " + (err.response?.data?.error || err.message));
@@ -97,14 +97,14 @@ const AdminDashboard = () => {
     const handlePharmacyStatusChange = async (id, status) => {
         try {
             const token = localStorage.getItem('token');
-            await axios.put(`http://localhost:5000/api/admin/pharmacies/${id}/status`, { status }, {
+            await axios.put(`https://medicine-finder-yej7.onrender.com/api/admin/pharmacies/${id}/status`, { status }, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             alert(`Pharmacy ${status === 'active' ? 'reactivated' : status} successfully!`);
             fetchAdminData();
             // Refresh search if active
             if (searchQuery.trim()) {
-                handleSearch({ preventDefault: () => {} });
+                handleSearch({ preventDefault: () => { } });
             }
         } catch (err) {
             alert("Action failed: " + (err.response?.data?.error || err.message));
@@ -116,14 +116,14 @@ const AdminDashboard = () => {
         if (!ok) return;
         try {
             const token = localStorage.getItem('token');
-            await axios.delete(`http://localhost:5000/api/admin/users/${id}`, {
+            await axios.delete(`https://medicine-finder-yej7.onrender.com/api/admin/users/${id}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             alert('User deleted successfully.');
             fetchAdminData();
             // Refresh search if active
             if (searchQuery.trim()) {
-                handleSearch({ preventDefault: () => {} });
+                handleSearch({ preventDefault: () => { } });
             }
         } catch (err) {
             alert("Delete failed: " + (err.response?.data?.error || err.message));
@@ -135,14 +135,14 @@ const AdminDashboard = () => {
         if (!ok) return;
         try {
             const token = localStorage.getItem('token');
-            await axios.delete(`http://localhost:5000/api/admin/pharmacies/${id}`, {
+            await axios.delete(`https://medicine-finder-yej7.onrender.com/api/admin/pharmacies/${id}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             alert('Pharmacy deleted successfully.');
             fetchAdminData();
             // Refresh search if active
             if (searchQuery.trim()) {
-                handleSearch({ preventDefault: () => {} });
+                handleSearch({ preventDefault: () => { } });
             }
         } catch (err) {
             alert("Delete failed: " + (err.response?.data?.error || err.message));
@@ -159,7 +159,7 @@ const AdminDashboard = () => {
     const handleModerateFeedback = async (id, action) => {
         try {
             const token = localStorage.getItem('token');
-            await axios.put(`http://localhost:5000/api/admin/feedback/${id}`, { status: action }, {
+            await axios.put(`https://medicine-finder-yej7.onrender.com/api/admin/feedback/${id}`, { status: action }, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             fetchAdminData();
@@ -176,7 +176,7 @@ const AdminDashboard = () => {
         setIsSearching(true);
         try {
             const token = localStorage.getItem('token');
-            const res = await axios.get(`http://localhost:5000/api/admin/users/search?query=${encodeURIComponent(searchQuery)}`, {
+            const res = await axios.get(`https://medicine-finder-yej7.onrender.com/api/admin/users/search?query=${encodeURIComponent(searchQuery)}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setSearchResults(res.data);
@@ -197,7 +197,7 @@ const AdminDashboard = () => {
     return (
         <div style={styles.container}>
             <h1>System Administration Portal</h1>
-            
+
             {/* Admin Search Bar */}
             <div style={styles.searchSection}>
                 <form onSubmit={handleSearch} style={styles.searchForm}>
@@ -255,25 +255,25 @@ const AdminDashboard = () => {
                                                     <div style={styles.actionGroup}>
                                                         {user.status === 'banned' ? (
                                                             <>
-                                                                <button onClick={() => { handleUserStatusChange(user.user_id, 'active');  }} style={styles.reactivateBtn}>
+                                                                <button onClick={() => { handleUserStatusChange(user.user_id, 'active'); }} style={styles.reactivateBtn}>
                                                                     Unban
                                                                 </button>
-                                                                <button onClick={() => { handleDeleteUser(user.user_id);  }} style={styles.deleteDangerBtn}>
+                                                                <button onClick={() => { handleDeleteUser(user.user_id); }} style={styles.deleteDangerBtn}>
                                                                     Delete
                                                                 </button>
                                                             </>
                                                         ) : (
                                                             <>
                                                                 {user.status !== 'suspended' && (
-                                                                    <button onClick={() => { handleUserStatusChange(user.user_id, 'suspended');  }} style={styles.suspendBtn}>
+                                                                    <button onClick={() => { handleUserStatusChange(user.user_id, 'suspended'); }} style={styles.suspendBtn}>
                                                                         Suspend
                                                                     </button>
                                                                 )}
-                                                                <button onClick={() => { handleUserStatusChange(user.user_id, 'banned');  }} style={styles.banBtn}>
+                                                                <button onClick={() => { handleUserStatusChange(user.user_id, 'banned'); }} style={styles.banBtn}>
                                                                     Ban
                                                                 </button>
                                                                 {user.status === 'suspended' && (
-                                                                    <button onClick={() => { handleUserStatusChange(user.user_id, 'active');  }} style={styles.reactivateBtn}>
+                                                                    <button onClick={() => { handleUserStatusChange(user.user_id, 'active'); }} style={styles.reactivateBtn}>
                                                                         Reactivate
                                                                     </button>
                                                                 )}
@@ -313,25 +313,25 @@ const AdminDashboard = () => {
                                         {/* User actions */}
                                         {user.status === 'banned' ? (
                                             <>
-                                                <button onClick={() => { handleUserStatusChange(user.user_id, 'active');  }} style={styles.reactivateBtn}>
+                                                <button onClick={() => { handleUserStatusChange(user.user_id, 'active'); }} style={styles.reactivateBtn}>
                                                     Unban User
                                                 </button>
-                                                <button onClick={() => { handleDeleteUser(user.user_id);  }} style={styles.deleteDangerBtn}>
+                                                <button onClick={() => { handleDeleteUser(user.user_id); }} style={styles.deleteDangerBtn}>
                                                     Delete User
                                                 </button>
                                             </>
                                         ) : (
                                             <>
                                                 {user.status !== 'suspended' && (
-                                                    <button onClick={() => { handleUserStatusChange(user.user_id, 'suspended');  }} style={styles.suspendBtn}>
+                                                    <button onClick={() => { handleUserStatusChange(user.user_id, 'suspended'); }} style={styles.suspendBtn}>
                                                         Suspend User
                                                     </button>
                                                 )}
-                                                <button onClick={() => { handleUserStatusChange(user.user_id, 'banned');  }} style={styles.banBtn}>
+                                                <button onClick={() => { handleUserStatusChange(user.user_id, 'banned'); }} style={styles.banBtn}>
                                                     Ban User
                                                 </button>
                                                 {user.status === 'suspended' && (
-                                                    <button onClick={() => { handleUserStatusChange(user.user_id, 'active');  }} style={styles.reactivateBtn}>
+                                                    <button onClick={() => { handleUserStatusChange(user.user_id, 'active'); }} style={styles.reactivateBtn}>
                                                         Reactivate User
                                                     </button>
                                                 )}
@@ -341,31 +341,31 @@ const AdminDashboard = () => {
                                         {user.pharmacy_pharmacy_id && (
                                             <>
                                                 {!user.pharmacy_verified && (
-                                                    <button onClick={() => { handleVerifyPharmacy(user.pharmacy_pharmacy_id);  }} style={styles.verifyBtn}>
+                                                    <button onClick={() => { handleVerifyPharmacy(user.pharmacy_pharmacy_id); }} style={styles.verifyBtn}>
                                                         Verify Pharmacy
                                                     </button>
                                                 )}
                                                 {user.pharmacy_status === 'banned' ? (
                                                     <>
-                                                        <button onClick={() => { handlePharmacyStatusChange(user.pharmacy_pharmacy_id, 'active');  }} style={styles.reactivateBtn}>
+                                                        <button onClick={() => { handlePharmacyStatusChange(user.pharmacy_pharmacy_id, 'active'); }} style={styles.reactivateBtn}>
                                                             Unban Pharmacy
                                                         </button>
-                                                        <button onClick={() => { handleDeletePharmacy(user.pharmacy_pharmacy_id);  }} style={styles.deleteDangerBtn}>
+                                                        <button onClick={() => { handleDeletePharmacy(user.pharmacy_pharmacy_id); }} style={styles.deleteDangerBtn}>
                                                             Delete Pharmacy
                                                         </button>
                                                     </>
                                                 ) : (
                                                     <>
                                                         {user.pharmacy_status !== 'suspended' && (
-                                                            <button onClick={() => { handlePharmacyStatusChange(user.pharmacy_pharmacy_id, 'suspended');  }} style={styles.suspendBtn}>
+                                                            <button onClick={() => { handlePharmacyStatusChange(user.pharmacy_pharmacy_id, 'suspended'); }} style={styles.suspendBtn}>
                                                                 Suspend Pharmacy
                                                             </button>
                                                         )}
-                                                        <button onClick={() => { handlePharmacyStatusChange(user.pharmacy_pharmacy_id, 'banned');  }} style={styles.banBtn}>
+                                                        <button onClick={() => { handlePharmacyStatusChange(user.pharmacy_pharmacy_id, 'banned'); }} style={styles.banBtn}>
                                                             Ban Pharmacy
                                                         </button>
                                                         {user.pharmacy_status === 'suspended' && (
-                                                            <button onClick={() => { handlePharmacyStatusChange(user.pharmacy_pharmacy_id, 'active');  }} style={styles.reactivateBtn}>
+                                                            <button onClick={() => { handlePharmacyStatusChange(user.pharmacy_pharmacy_id, 'active'); }} style={styles.reactivateBtn}>
                                                                 Reactivate Pharmacy
                                                             </button>
                                                         )}
@@ -406,31 +406,31 @@ const AdminDashboard = () => {
                                                 <td style={styles.td}>
                                                     <div style={styles.actionGroup}>
                                                         {!user.verified && (
-                                                            <button onClick={() => { handleVerifyDoctor(user.user_id);  }} style={styles.verifyBtn}>
+                                                            <button onClick={() => { handleVerifyDoctor(user.user_id); }} style={styles.verifyBtn}>
                                                                 Verify
                                                             </button>
                                                         )}
                                                         {user.status === 'banned' ? (
                                                             <>
-                                                                <button onClick={() => { handleUserStatusChange(user.user_id, 'active');  }} style={styles.reactivateBtn}>
+                                                                <button onClick={() => { handleUserStatusChange(user.user_id, 'active'); }} style={styles.reactivateBtn}>
                                                                     Unban
                                                                 </button>
-                                                                <button onClick={() => { handleDeleteUser(user.user_id);  }} style={styles.deleteDangerBtn}>
+                                                                <button onClick={() => { handleDeleteUser(user.user_id); }} style={styles.deleteDangerBtn}>
                                                                     Delete
                                                                 </button>
                                                             </>
                                                         ) : (
                                                             <>
                                                                 {user.status !== 'suspended' && (
-                                                                    <button onClick={() => { handleUserStatusChange(user.user_id, 'suspended');  }} style={styles.suspendBtn}>
+                                                                    <button onClick={() => { handleUserStatusChange(user.user_id, 'suspended'); }} style={styles.suspendBtn}>
                                                                         Suspend
                                                                     </button>
                                                                 )}
-                                                                <button onClick={() => { handleUserStatusChange(user.user_id, 'banned');  }} style={styles.banBtn}>
+                                                                <button onClick={() => { handleUserStatusChange(user.user_id, 'banned'); }} style={styles.banBtn}>
                                                                     Ban
                                                                 </button>
                                                                 {user.status === 'suspended' && (
-                                                                    <button onClick={() => { handleUserStatusChange(user.user_id, 'active');  }} style={styles.reactivateBtn}>
+                                                                    <button onClick={() => { handleUserStatusChange(user.user_id, 'active'); }} style={styles.reactivateBtn}>
                                                                         Reactivate
                                                                     </button>
                                                                 )}
@@ -471,25 +471,25 @@ const AdminDashboard = () => {
                                                 <div style={styles.actionGroup}>
                                                     {user.status === 'banned' ? (
                                                         <>
-                                                            <button onClick={() => { handleUserStatusChange(user.user_id, 'active');  }} style={styles.reactivateBtn}>
+                                                            <button onClick={() => { handleUserStatusChange(user.user_id, 'active'); }} style={styles.reactivateBtn}>
                                                                 Unban
                                                             </button>
-                                                            <button onClick={() => { handleDeleteUser(user.user_id);  }} style={styles.deleteDangerBtn}>
+                                                            <button onClick={() => { handleDeleteUser(user.user_id); }} style={styles.deleteDangerBtn}>
                                                                 Delete
                                                             </button>
                                                         </>
                                                     ) : (
                                                         <>
                                                             {user.status !== 'suspended' && (
-                                                                <button onClick={() => { handleUserStatusChange(user.user_id, 'suspended');  }} style={styles.suspendBtn}>
+                                                                <button onClick={() => { handleUserStatusChange(user.user_id, 'suspended'); }} style={styles.suspendBtn}>
                                                                     Suspend
                                                                 </button>
                                                             )}
-                                                            <button onClick={() => { handleUserStatusChange(user.user_id, 'banned');  }} style={styles.banBtn}>
+                                                            <button onClick={() => { handleUserStatusChange(user.user_id, 'banned'); }} style={styles.banBtn}>
                                                                 Ban
                                                             </button>
                                                             {user.status === 'suspended' && (
-                                                                <button onClick={() => { handleUserStatusChange(user.user_id, 'active');  }} style={styles.reactivateBtn}>
+                                                                <button onClick={() => { handleUserStatusChange(user.user_id, 'active'); }} style={styles.reactivateBtn}>
                                                                     Reactivate
                                                                 </button>
                                                             )}

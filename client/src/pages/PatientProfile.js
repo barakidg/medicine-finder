@@ -24,7 +24,7 @@ export default function PatientProfile() {
 
     const fetchPrescriptions = async (email) => {
         try {
-            const res = await axios.get(`http://localhost:5000/api/prescriptions/my-prescriptions/${email}`);
+            const res = await axios.get(`https://medicine-finder-yej7.onrender.com/api/prescriptions/my-prescriptions/${email}`);
             setPrescriptions(res.data);
         } catch (err) {
             console.error("Error fetching prescriptions", err);
@@ -42,7 +42,7 @@ export default function PatientProfile() {
 
         try {
             const token = localStorage.getItem('token');
-            await axios.delete(`http://localhost:5000/api/prescriptions/${prescriptionId}`, {
+            await axios.delete(`https://medicine-finder-yej7.onrender.com/api/prescriptions/${prescriptionId}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             alert('Prescription cancelled successfully');
@@ -60,7 +60,7 @@ export default function PatientProfile() {
 
         try {
             const token = localStorage.getItem('token');
-            await axios.put(`http://localhost:5000/api/prescriptions/${prescriptionId}/fulfill`, {}, {
+            await axios.put(`https://medicine-finder-yej7.onrender.com/api/prescriptions/${prescriptionId}/fulfill`, {}, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             alert('Prescription marked as fulfilled!');
