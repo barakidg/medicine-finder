@@ -682,11 +682,7 @@ app.get('/api/pharmacist/feedback', authenticateToken(['Pharmacist']), async (re
 const superFix = async () => {
     try {
         console.log("Starting database initialization...");
-        await pool.query('DROP TABLE IF EXISTS users CASCADE;');
-        await pool.query('DROP TABLE IF EXISTS pharmacies CASCADE;');
-        await pool.query('DROP TABLE IF EXISTS medicines CASCADE;');
-        await pool.query('DROP TABLE IF EXISTS inventory CASCADE;');
-        await pool.query('DROP TABLE IF EXISTS prescriptions CASCADE;');
+
         // 1. Create all tables from your init.sql schema
         await pool.query(`
             CREATE TABLE IF NOT EXISTS users (
@@ -740,6 +736,16 @@ const superFix = async () => {
                 instructions TEXT,
                 issued_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 status VARCHAR(20) DEFAULT 'pending'
+            );
+
+            CREATE TABLE IF NOT EXISTS feedback (
+                feedback_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+                patient_id UUID REFERENCES users(user_id),
+                pharmacy_id UUID REFERENCES pharmacies(pharmacy_id),
+                rating INTEGER CHECK (rating >= 1 AND rating <= 5),
+                comment TEXT,
+                status VARCHAR(20) DEFAULT 'Pending', -- Pending, Approved, Removed
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             );
         `);
         console.log("✅ All tables checked/created.");
