@@ -31,7 +31,8 @@ jobs:
           NODE_ENV: test
         run: |
           cd Backend
-          # Using npx ensures the local vitest binary is found and executed correctly
+          # Grant execution permissions to the local node_modules binaries
+          chmod +x node_modules/.bin/vitest
           npx vitest run
 
   test-frontend:
