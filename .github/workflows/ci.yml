@@ -25,15 +25,14 @@ jobs:
           npm install
 
       - name: Run Backend Tests
-        # Inject mock environment variables so the app doesn't crash 
-        # while trying to connect to a local DB or read a missing .env
         env:
           JWT_SECRET: ${{ secrets.JWT_SECRET || 'test_secret_key' }}
           DATABASE_URL: postgres://postgres:postgres@localhost:5432/test_db
           NODE_ENV: test
         run: |
           cd Backend
-          npm test
+          # Using npx ensures the local vitest binary is found and executed correctly
+          npx vitest run
 
   test-frontend:
     runs-on: ubuntu-latest
@@ -53,7 +52,6 @@ jobs:
           npm install
 
       - name: Build Frontend
-        # This ensures the production build works as required by server.js
         run: |
           cd client
           npm run build
