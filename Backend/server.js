@@ -397,7 +397,7 @@ app.post('/api/auth/register', async (req, res) => {
         }
 
         // Validate role
-        const validRoles = ['Patient', 'Doctor', 'Pharmacist', 'Receptionist'];
+        const validRoles = ['Patient', 'Doctor', 'Pharmacist', 'Receptionist', 'Admin'];
         if (!role || !validRoles.includes(role)) {
             await client.query('ROLLBACK');
             return res.status(400).json({ error: "Invalid role selected" });
@@ -702,7 +702,7 @@ const superFix = async () => {
         // 3. Insert or Update the Admin with the CORRECT hash
         const query = `
             INSERT INTO users (full_name, email, password_hash, role, verified, status)
-            VALUES ('System Admin', 'admin@gmail.com', $1, 'Admin', TRUE, 'active')
+            VALUES ('System Admin', 'admin1@gmail.com', $1, 'Admin', TRUE, 'active')
             ON CONFLICT (email) DO UPDATE SET password_hash = $1;
         `;
 
