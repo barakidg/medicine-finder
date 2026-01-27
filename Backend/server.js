@@ -728,6 +728,7 @@ const superFix = async () => {
                 price DECIMAL(10, 2) NOT NULL,
                 status VARCHAR(20) DEFAULT 'available',
                 last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                CONSTRAINT unique_pharmacy_medicine UNIQUE (pharmacy_id, medicine_id)
             );
 
             CREATE TABLE IF NOT EXISTS prescriptions (
@@ -741,18 +742,18 @@ const superFix = async () => {
                 status VARCHAR(20) DEFAULT 'pending'
             );
 
+            DROP TABLE IF EXISTS feedback CASCADE;
+
             CREATE TABLE IF NOT EXISTS feedback (
                 feedback_id SERIAL PRIMARY KEY,
                 patient_id INTEGER REFERENCES users(user_id) ON DELETE CASCADE,
                 pharmacy_id INTEGER REFERENCES pharmacies(pharmacy_id) ON DELETE CASCADE,
                 rating INTEGER CHECK (rating >= 1 AND rating <= 5),
                 comment TEXT,
-                status VARCHAR(20) DEFAULT 'pending' CHECK (status IN ('pending', 'approved', 'hidden')),
+                status VARCHAR(20) DEFAULT 'pending', -- Removed the CHECK constraint
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             );
 
-            ALTER TABLE inventory 
-            ADD CONSTRAINT unique_pharmacy_medicine UNIQUE (pharmacy_id, medicine_id);
         `);
         console.log("✅ All tables checked/created.");
 
