@@ -3,6 +3,8 @@ import axios from 'axios';
 import { useLocation } from 'react-router-dom';
 import { GoogleMap, useJsApiLoader, Marker, InfoWindow } from '@react-google-maps/api';
 import { useAuth } from '../components/AuthContext';
+import dotenv from 'dotenv';
+dotenv.config();
 
 const mapContainerStyle = {
     width: '100%',
@@ -28,7 +30,7 @@ export default function MedicineSearch() {
 
     const { isLoaded } = useJsApiLoader({
         id: 'google-map-script',
-        googleMapsApiKey: "AIzaSyDVFoAFy4LSfELZ3C2Izd43zO1ac5AXSOY"
+        googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_KEY
     });
 
     const location = useLocation();
