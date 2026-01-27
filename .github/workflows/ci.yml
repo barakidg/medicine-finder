@@ -11,26 +11,49 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Setup Node
+      
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - name: Install & Test
+          cache: 'npm'
+          cache-dependency-path: Backend/package-lock.json
+
+      - name: Install Backend Dependencies
         run: |
           cd Backend
           npm install
+
+      - name: Run Backend Tests
+        # Inject mock environment variables so the app doesn't crash 
+        # while trying to connect to a local DB or read a missing .env
+        env:
+          JWT_SECRET: ${{ secrets.JWT_SECRET || 'test_secret_key' }}
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432/test_db
+          NODE_ENV: test
+        run: |
+          cd Backend
           npm test
 
   test-frontend:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Setup Node
+      
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - name: Install & Build
+          cache: 'npm'
+          cache-dependency-path: client/package-lock.json
+
+      - name: Install Frontend Dependencies
         run: |
           cd client
           npm install
+
+      - name: Build Frontend
+        # This ensures the production build works as required by server.js
+        run: |
+          cd client
           npm run build
