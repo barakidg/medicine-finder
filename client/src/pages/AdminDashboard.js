@@ -458,46 +458,54 @@ const AdminDashboard = () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td style={styles.td}>{user.full_name}</td>
-                                            <td style={styles.td}>{user.email}</td>
-                                            <td style={styles.td}>{user.role}</td>
-                                            <td style={styles.td}>
-                                                <span style={{ color: statusBadge.color, fontWeight: 'bold' }}>
-                                                    {statusBadge.text}
-                                                </span>
-                                            </td>
-                                            <td style={styles.td}>
-                                                <div style={styles.actionGroup}>
-                                                    {user.status === 'banned' ? (
-                                                        <>
-                                                            <button onClick={() => { handleUserStatusChange(user.user_id, 'active'); }} style={styles.reactivateBtn}>
-                                                                Unban
-                                                            </button>
-                                                            <button onClick={() => { handleDeleteUser(user.user_id); }} style={styles.deleteDangerBtn}>
-                                                                Delete
-                                                            </button>
-                                                        </>
-                                                    ) : (
-                                                        <>
-                                                            {user.status !== 'suspended' && (
-                                                                <button onClick={() => { handleUserStatusChange(user.user_id, 'suspended'); }} style={styles.suspendBtn}>
-                                                                    Suspend
-                                                                </button>
-                                                            )}
-                                                            <button onClick={() => { handleUserStatusChange(user.user_id, 'banned'); }} style={styles.banBtn}>
-                                                                Ban
-                                                            </button>
-                                                            {user.status === 'suspended' && (
-                                                                <button onClick={() => { handleUserStatusChange(user.user_id, 'active'); }} style={styles.reactivateBtn}>
-                                                                    Reactivate
-                                                                </button>
-                                                            )}
-                                                        </>
-                                                    )}
-                                                </div>
-                                            </td>
-                                        </tr>
+                                        {users
+                                            .filter(u => u.role !== 'Admin')
+                                            .map(u => {
+                                                const statusBadge = getStatusBadge(u.status);
+                                                return (
+                                                    <tr key={u.user_id}> {/* Added unique key */}
+                                                        <td style={styles.td}>{u.full_name}</td> {/* Changed 'user' to 'u' */}
+                                                        <td style={styles.td}>{u.email}</td>     {/* Changed 'user' to 'u' */}
+                                                        <td style={styles.td}>{u.role}</td>      {/* Changed 'user' to 'u' */}
+                                                        <td style={styles.td}>
+                                                            <span style={{ color: statusBadge.color, fontWeight: 'bold' }}>
+                                                                {statusBadge.text}
+                                                            </span>
+                                                        </td>
+                                                        <td style={styles.td}>
+                                                            <div style={styles.actionGroup}>
+                                                                {u.status === 'banned' ? (
+                                                                    <>
+                                                                        <button onClick={() => { handleUserStatusChange(u.user_id, 'active'); }} style={styles.reactivateBtn}>
+                                                                            Unban
+                                                                        </button>
+                                                                        <button onClick={() => { handleDeleteUser(u.user_id); }} style={styles.deleteDangerBtn}>
+                                                                            Delete
+                                                                        </button>
+                                                                    </>
+                                                                ) : (
+                                                                    <>
+                                                                        {u.status !== 'suspended' && (
+                                                                            <button onClick={() => { handleUserStatusChange(u.user_id, 'suspended'); }} style={styles.suspendBtn}>
+                                                                                Suspend
+                                                                            </button>
+                                                                        )}
+                                                                        <button onClick={() => { handleUserStatusChange(u.user_id, 'banned'); }} style={styles.banBtn}>
+                                                                            Ban
+                                                                        </button>
+                                                                        {u.status === 'suspended' && (
+                                                                            <button onClick={() => { handleUserStatusChange(u.user_id, 'active'); }} style={styles.reactivateBtn}>
+                                                                                Reactivate
+                                                                            </button>
+                                                                        )}
+                                                                    </>
+                                                                )}
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                );
+                                            })
+                                        }
                                     </tbody>
                                 </table>
                             </div>
