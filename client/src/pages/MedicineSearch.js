@@ -3,8 +3,6 @@ import axios from 'axios';
 import { useLocation } from 'react-router-dom';
 import { GoogleMap, useJsApiLoader, Marker, InfoWindow } from '@react-google-maps/api';
 import { useAuth } from '../components/AuthContext';
-import dotenv from 'dotenv';
-dotenv.config();
 
 const mapContainerStyle = {
     width: '100%',
