@@ -258,7 +258,6 @@ const Register = () => {
                                 <option value="Doctor">👨‍⚕️ Doctor</option>
                                 <option value="Pharmacist">💊 Pharmacist</option>
                                 <option value="Receptionist">📋 Receptionist</option>
-                                <option value="Admin">Admin</option>
                             </select>
                         </div>
 
