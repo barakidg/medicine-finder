@@ -112,7 +112,7 @@ CREATE INDEX IF NOT EXISTS idx_feedback_status ON feedback(status);
 -- Insert default admin user (password: admin)
 -- Password hash for 'admin' using bcrypt with salt rounds 10
 INSERT INTO users (full_name, email, password_hash, role, verified, status)
-VALUES ('System Admin', 'admin@medicinefinder.com', '$2b$10$V3piuS37LI0w5bZivj/fiB1lYR23jvJO', 'Admin', TRUE, 'active')
+VALUES ('System Admin', 'admin@gmail.com', '$2b$10$rW1yMS06LB5AhJWSJxBZ/ulMrlk/0ZnL2b50x4X2NKFl6RU4ouw.K', 'Admin', TRUE, 'active')
 ON CONFLICT (email) DO NOTHING;
 
 -- Insert sample medicines for testing
