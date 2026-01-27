@@ -685,6 +685,9 @@ const superFix = async () => {
 
         // 1. Create all tables from your init.sql schema
         await pool.query(`
+            drop table if exists feedback cascade;
+
+
             CREATE TABLE IF NOT EXISTS users (
                 user_id SERIAL PRIMARY KEY,
                 full_name VARCHAR(255) NOT NULL,
@@ -739,12 +742,12 @@ const superFix = async () => {
             );
 
             CREATE TABLE IF NOT EXISTS feedback (
-                feedback_id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-                patient_id UUID REFERENCES users(user_id),
-                pharmacy_id UUID REFERENCES pharmacies(pharmacy_id),
+                feedback_id SERIAL PRIMARY KEY,
+                patient_id INTEGER REFERENCES users(user_id) ON DELETE CASCADE,
+                pharmacy_id INTEGER REFERENCES pharmacies(pharmacy_id) ON DELETE CASCADE,
                 rating INTEGER CHECK (rating >= 1 AND rating <= 5),
                 comment TEXT,
-                status VARCHAR(20) DEFAULT 'Pending', -- Pending, Approved, Removed
+                status VARCHAR(20) DEFAULT 'pending' CHECK (status IN ('pending', 'approved', 'hidden')),
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             );
         `);
