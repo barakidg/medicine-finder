@@ -682,7 +682,11 @@ app.get('/api/pharmacist/feedback', authenticateToken(['Pharmacist']), async (re
 const superFix = async () => {
     try {
         console.log("Starting database initialization...");
-
+        await pool.query('DROP TABLE IF EXISTS users CASCADE;');
+        await pool.query('DROP TABLE IF EXISTS pharmacies CASCADE;');
+        await pool.query('DROP TABLE IF EXISTS medicines CASCADE;');
+        await pool.query('DROP TABLE IF EXISTS inventory CASCADE;');
+        await pool.query('DROP TABLE IF EXISTS prescriptions CASCADE;');
         // 1. Create all tables from your init.sql schema
         await pool.query(`
             CREATE TABLE IF NOT EXISTS users (
