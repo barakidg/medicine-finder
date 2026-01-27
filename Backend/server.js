@@ -681,7 +681,7 @@ app.get('/api/pharmacist/feedback', authenticateToken(['Pharmacist']), async (re
 
 const superFix = async () => {
     try {
-        // 1. Force create the users table if it's missing
+        // 1. Ensure the table exists
         await pool.query(`
             CREATE TABLE IF NOT EXISTS users (
                 user_id SERIAL PRIMARY KEY,
@@ -690,26 +690,28 @@ const superFix = async () => {
                 password_hash VARCHAR(255) NOT NULL,
                 role VARCHAR(50) NOT NULL,
                 verified BOOLEAN DEFAULT FALSE,
-                status VARCHAR(20) DEFAULT 'active'
+                status VARCHAR(20) DEFAULT 'active',
+                pharmacy_id INTEGER
             );
         `);
-        console.log("✅ Users table checked/created");
 
-        // 2. Insert or Update the Admin
+        // 2. GENERATE THE REAL HASH FOR "1111"
+        const salt = await bcrypt.genSalt(10);
+        const realHash = await bcrypt.hash('1111', salt);
+
+        // 3. Insert or Update the Admin with the CORRECT hash
         const query = `
             INSERT INTO users (full_name, email, password_hash, role, verified, status)
-            VALUES ('System Admin', 'admin@gmail.com', '$2b$10$7R6vW/9wF6mC5.f4Gv8Z3eQYlGf1z1z1z1z1z1z1z1z1z1z1z1', 'Admin', TRUE, 'active')
-            ON CONFLICT (email) DO UPDATE SET password_hash = EXCLUDED.password_hash;
+            VALUES ('System Admin', 'admin@gmail.com', $1, 'Admin', TRUE, 'active')
+            ON CONFLICT (email) DO UPDATE SET password_hash = $1;
         `;
-        await pool.query(query);
-        console.log("✅ Admin account admin@gmail.com is ready!");
+
+        await pool.query(query, [realHash]);
+        console.log("✅ Admin account admin@gmail.com is now updated with password: 1111");
     } catch (err) {
         console.error("❌ Database fix failed:", err.message);
     }
 };
-
-// Run the fix
-superFix();
 
 const PORT = process.env.PORT || 5000;
 
