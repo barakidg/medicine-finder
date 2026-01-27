@@ -685,7 +685,7 @@ const superFix = async () => {
 
         // 1. Create all tables from your init.sql schema
         await pool.query(`
-            drop table if exists feedback cascade;
+            
 
 
             CREATE TABLE IF NOT EXISTS users (
@@ -750,6 +750,9 @@ const superFix = async () => {
                 status VARCHAR(20) DEFAULT 'pending' CHECK (status IN ('pending', 'approved', 'hidden')),
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             );
+
+            ALTER TABLE inventory 
+            ADD CONSTRAINT unique_pharmacy_medicine UNIQUE (pharmacy_id, medicine_id);
         `);
         console.log("✅ All tables checked/created.");
 
