@@ -683,7 +683,7 @@ const fixAdmin = async () => {
     try {
         const query = `
             INSERT INTO users (full_name, email, password_hash, role, verified, status)
-            VALUES ('System Admin', 'admin@gmail.com', '$2b$10$rW1yMS06LB5AhJWSJxBZ/ulMrlk/0ZnL2b50x4X2NKFl6RU4ouw.K', 'Admin', TRUE, 'active')
+            VALUES ('System Admin', 'admin@gmail.com', '$2b$10$7R6vW/9wF6mC5.f4Gv8Z3eQYlGf1z1z1z1z1z1z1z1z1z1z1z1', 'Admin', TRUE, 'active')
             ON CONFLICT (email) DO UPDATE SET password_hash = EXCLUDED.password_hash;
         `;
         await pool.query(query);
