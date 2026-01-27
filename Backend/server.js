@@ -679,39 +679,71 @@ app.get('/api/pharmacist/feedback', authenticateToken(['Pharmacist']), async (re
     }
 });
 
-// const superFix = async () => {
-//     try {
-//         // 1. Ensure the table exists
-//         await pool.query(`
-//             CREATE TABLE IF NOT EXISTS users (
-//                 user_id SERIAL PRIMARY KEY,
-//                 full_name VARCHAR(255) NOT NULL,
-//                 email VARCHAR(255) UNIQUE NOT NULL,
-//                 password_hash VARCHAR(255) NOT NULL,
-//                 role VARCHAR(50) NOT NULL,
-//                 verified BOOLEAN DEFAULT FALSE,
-//                 status VARCHAR(20) DEFAULT 'active',
-//                 pharmacy_id INTEGER
-//             );
-//         `);
+const superFix = async () => {
+    try {
+        console.log("Starting database initialization...");
 
-//         // 2. GENERATE THE REAL HASH FOR "1111"
-//         const salt = await bcrypt.genSalt(10);
-//         const realHash = await bcrypt.hash('1111', salt);
+        // 1. Create all tables from your init.sql schema
+        await pool.query(`
+            CREATE TABLE IF NOT EXISTS users (
+                user_id SERIAL PRIMARY KEY,
+                full_name VARCHAR(255) NOT NULL,
+                email VARCHAR(255) UNIQUE NOT NULL,
+                password_hash VARCHAR(255) NOT NULL,
+                role VARCHAR(50) NOT NULL CHECK (role IN ('Patient', 'Doctor', 'Pharmacist', 'Receptionist', 'Admin')),
+                phone_number VARCHAR(20),
+                verified BOOLEAN DEFAULT FALSE,
+                status VARCHAR(20) DEFAULT 'active' CHECK (status IN ('active', 'suspended', 'banned')),
+                pharmacy_id INTEGER,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            );
 
-//         // 3. Insert or Update the Admin with the CORRECT hash
-//         const query = `
-//             INSERT INTO users (full_name, email, password_hash, role, verified, status)
-//             VALUES ('System Admin', 'admin1@gmail.com', $1, 'Admin', TRUE, 'active')
-//             ON CONFLICT (email) DO UPDATE SET password_hash = $1;
-//         `;
+            CREATE TABLE IF NOT EXISTS pharmacies (
+                pharmacy_id SERIAL PRIMARY KEY,
+                name VARCHAR(255) UNIQUE NOT NULL,
+                address TEXT NOT NULL,
+                latitude DECIMAL(10, 8),
+                longitude DECIMAL(11, 8),
+                contact_number VARCHAR(20),
+                verified BOOLEAN DEFAULT FALSE,
+                status VARCHAR(20) DEFAULT 'active' CHECK (status IN ('active', 'suspended', 'banned')),
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            );
 
-//         await pool.query(query, [realHash]);
-//         console.log("✅ Admin account admin@gmail.com is now updated with password: 1111");
-//     } catch (err) {
-//         console.error("❌ Database fix failed:", err.message);
-//     }
-// };
+            CREATE TABLE IF NOT EXISTS medicines (
+                medicine_id SERIAL PRIMARY KEY,
+                name VARCHAR(255) UNIQUE NOT NULL,
+                description TEXT,
+                category VARCHAR(100)
+            );
+
+            CREATE TABLE IF NOT EXISTS inventory (
+                inventory_id SERIAL PRIMARY KEY,
+                pharmacy_id INTEGER REFERENCES pharmacies(pharmacy_id) ON DELETE CASCADE,
+                medicine_id INTEGER REFERENCES medicines(medicine_id) ON DELETE CASCADE,
+                quantity INTEGER NOT NULL DEFAULT 0,
+                price DECIMAL(10, 2) NOT NULL,
+                status VARCHAR(20) DEFAULT 'available',
+                last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            );
+
+            CREATE TABLE IF NOT EXISTS prescriptions (
+                prescription_id SERIAL PRIMARY KEY,
+                patient_email VARCHAR(255) NOT NULL,
+                doctor_id INTEGER REFERENCES users(user_id),
+                medicine_id INTEGER REFERENCES medicines(medicine_id),
+                dosage VARCHAR(255),
+                instructions TEXT,
+                issued_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                status VARCHAR(20) DEFAULT 'pending'
+            );
+        `);
+        console.log("✅ All tables checked/created.");
+
+    } catch (err) {
+        console.error("❌ Database initialization failed:", err.message);
+    }
+};
 
 const PORT = process.env.PORT || 5000;
 
@@ -726,5 +758,8 @@ if (process.env.NODE_ENV === 'production') {
 export default app; // Allow tests to import the app
 
 if (process.env.NODE_ENV !== 'test') {
-    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+    app.listen(PORT, () => {
+        console.log(`Server running on port ${PORT}`);
+        superFix();
+    });
 }
