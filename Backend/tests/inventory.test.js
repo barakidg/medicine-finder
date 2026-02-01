@@ -19,7 +19,7 @@ app.use(express.json());
 app.use('/api/inventory', inventoryRoutes);
 
 // Use the secret defined in your vitest.config.js
-const TEST_SECRET = 'your_test_secret_here';
+const TEST_SECRET = 'test123';
 
 // 3. Helper to create a valid Pharmacist JWT
 const mockToken = jwt.sign(

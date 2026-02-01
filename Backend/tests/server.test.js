@@ -16,7 +16,7 @@ vi.mock('../db.js', () => ({
 
 import pool from '../db.js';
 
-const TEST_SECRET = 'your_test_secret_here';
+const TEST_SECRET = 'test123';
 
 describe('Server.js Integration & Admin Routes', () => {
     beforeEach(() => {

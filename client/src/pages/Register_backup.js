@@ -19,7 +19,7 @@ const Register = () => {
 
     const { isLoaded } = useJsApiLoader({
         id: 'google-map-script',
-        googleMapsApiKey: "AIzaSyDVFoAFy4LSfELZ3C2Izd43zO1ac5AXSOY"
+        googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_KEY
     });
 
     const handleUserSubmit = async (e) => {

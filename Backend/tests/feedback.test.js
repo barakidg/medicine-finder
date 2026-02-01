@@ -17,7 +17,7 @@ const app = express();
 app.use(express.json());
 app.use('/api/feedback', feedbackRoutes);
 
-const TEST_SECRET = 'your_test_secret_here';
+const TEST_SECRET = 'test123';
 
 describe('Feedback Route - User Status Restrictions', () => {
     beforeEach(() => {

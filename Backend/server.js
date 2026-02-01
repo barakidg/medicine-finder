@@ -46,7 +46,7 @@ app.use('/api/inventory', inventoryRoutes);
 app.use('/api/prescriptions', prescriptionsRoutes);
 app.use('/api/feedback', feedbackRoutes);
 
-// --- ADMIN ROUTES (#2 Improvement) ---
+// --- ADMIN ROUTES  ---
 
 // 1. Get all pharmacies for verification
 app.get('/api/admin/pharmacies', authenticateToken(['Admin']), async (req, res) => {
@@ -73,7 +73,7 @@ app.put('/api/admin/pharmacies/:id/verify', authenticateToken(['Admin']), async 
 // 3. Get all users for management
 app.get('/api/admin/users', authenticateToken(['Admin']), async (req, res) => {
     try {
-        const result = await pool.query('SELECT user_id, full_name, email, role, verified, status, phone_number, created_at FROM users ORDER BY created_at DESC');
+        const result = await pool.query('SELECT user_id, full_name, email, role, verified, status, phone_number, created_at FROM users WHERE role != "Admin" ORDER BY created_at DESC');
         res.json(result.rows);
     } catch (err) {
         res.status(500).json({ error: err.message });
